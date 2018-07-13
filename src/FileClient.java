@@ -12,12 +12,14 @@ public class FileClient {
 
 	public static String HOST = "127.0.0.1";
 	public static int PORT = 5555;
-
+	public static boolean state;
+	
 	public static void main(String[] args) {
 		Socket socket = null;
 		String name = null, cmd = null, checksum = null, filename = null;
 		PrintWriter printWriter = null;
 		BufferedReader socketReader = null;
+		Thread thread = null;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String details = null;
 		File file = null;
@@ -52,16 +54,8 @@ public class FileClient {
 			printWriter.println(name);
 			printWriter.flush();
 			System.out.println("Name sent to server");
-
-			// check for ack
 			socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			if (socketReader.readLine().equals("ACK")) {
-				System.out.println("ACK RECEIVED");
-			} else {
-				System.out.println("NO ACK");
-			}
-
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.out.println("Unable to communicate with server");
 			try {
 				socket.close();
@@ -70,12 +64,16 @@ public class FileClient {
 			}
 			// e.printStackTrace();
 		}
-
+		state=false;
 		// infinite loop until user enter END
 		while (true) {
 			try {
 
 				// checking server status
+				while (state) {
+					
+				}
+				System.out.println("receiving hello");
 				socketReader.readLine().equals("Hello");
 				System.out.println("Server is alive");
 
@@ -125,7 +123,8 @@ public class FileClient {
 
 							// Send the file
 							System.out.println("Sending files");
-							new FileSender(socket, cmd).start();
+							thread = new FileSender(socket, cmd);
+							thread.start();
 							System.out.println("Thread to send data started");
 
 							printWriter.flush();
@@ -147,7 +146,7 @@ public class FileClient {
 					printWriter.flush();
 					// waiting for result
 					String res = socketReader.readLine();
-					
+
 					// display file details from strings
 					// System.out.println(res);
 					// no file
@@ -163,6 +162,8 @@ public class FileClient {
 						System.out.println(stringTokenizer2.nextToken() + " - " + stringTokenizer2.nextToken());
 					}
 					System.out.println("--------------------------------------------");
+					printWriter.print(1);
+					printWriter.flush();
 
 				} else if (cmd.equalsIgnoreCase("END")) {
 					System.out.println("Goodbye");
