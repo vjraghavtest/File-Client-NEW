@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.StringTokenizer;
 
 public class FileClient {
 
@@ -139,9 +140,27 @@ public class FileClient {
 				} else if (cmd.equalsIgnoreCase("LIST")) {
 
 					// make string for request
+					String req="LIST|";
 					// send request to server
+					printWriter.println(req);
+					printWriter.flush();
 					// waiting for result
+					String res=socketReader.readLine();
 					// display file details from strings
+//					System.out.println(res);
+					//no file
+					if(res.equals("")){
+						System.out.println("You have no files to display");
+						continue;
+					}
+					System.out.println("------------------------------------------");
+					System.out.println("Filename - Filepath");
+					StringTokenizer stringTokenizer=new StringTokenizer(res, "|");
+					while(stringTokenizer.hasMoreTokens()){
+						StringTokenizer stringTokenizer2=new StringTokenizer(stringTokenizer.nextToken(), "<");
+						System.out.println(stringTokenizer2.nextToken()+" - "+stringTokenizer2.nextToken());
+					}
+					System.out.println("--------------------------------------------");
 
 				} else if (cmd.equalsIgnoreCase("END")) {
 					System.out.println("Goodbye");

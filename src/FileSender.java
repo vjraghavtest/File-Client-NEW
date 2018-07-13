@@ -74,7 +74,7 @@ public class FileSender extends Thread {
 			} else {
 				System.out.println("File transfer failed");
 			}
-			System.out.println("Enter the file path");
+			FileClient.printMenu();
 			fileInputStream.close();
 			inputStream.close();
 			dataOutputStream.flush();

@@ -1,0 +1,47 @@
+System.out.println("Enter the file path");
+				cmd = reader.readLine();
+				if (cmd.equals("END"))
+					break;
+				cmd = cmd.replace("\"", "");
+				// checking it is file or not
+				System.out.println("Loading file with path " + cmd);
+				file = new File(cmd);
+				if ((file.isFile())) {
+					// sending file details as string to server
+					filename = cmd.substring(cmd.lastIndexOf("\\") + 1);
+					System.out.println("Calculating checksum");
+					checksum = Checksum.getChecksum(cmd);
+					details = "name:" + filename + ",checksum:" + checksum + ",filesize:" + file.length() + ",owner:"
+							+ name + "|";
+					System.out.println("File Details - " + details);
+
+					// creating object op stream
+					// sending object to server
+					try {
+						System.out.println("Sending file details");
+						printWriter.println(details);
+						printWriter.flush();
+						System.out.println("File details sent");
+
+						// receiving ack for obj
+						if (socketReader.readLine().equals("ACK OBJ")) {
+							System.out.println("ACK OBJ received");
+						} else {
+							System.out.println("No ACK OBJ");
+							throw new Exception("NO ACK OBJ");
+						}
+
+						// Send the file
+						System.out.println("Sending files");
+						new FileSender(socket, cmd).start();
+						System.out.println("Thread to send data started");
+
+						printWriter.flush();
+
+					} catch (Exception e) {
+//						e.printStackTrace();
+						System.out.println("Connot receive ACK from server");
+						break;
+					}
+				} else
+					System.out.println("File not found");
