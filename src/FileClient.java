@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.StringTokenizer;
 
 public class FileClient {
 
@@ -140,11 +139,13 @@ public class FileClient {
 				} else if (cmd.equalsIgnoreCase("LIST")) {
 
 					// make string for request
+<<<<<<< HEAD
 					String req = "LIST|";
+=======
+>>>>>>> parent of 64a26fa... LIST Feature
 					// send request to server
-					printWriter.println(req);
-					printWriter.flush();
 					// waiting for result
+<<<<<<< HEAD
 					String res = socketReader.readLine();
 
 					// display file details from strings
@@ -164,6 +165,9 @@ public class FileClient {
 					System.out.println("--------------------------------------------");
 					printWriter.print(1);
 					printWriter.flush();
+=======
+					// display file details from strings
+>>>>>>> parent of 64a26fa... LIST Feature
 
 				} else if (cmd.equalsIgnoreCase("END")) {
 					System.out.println("Goodbye");

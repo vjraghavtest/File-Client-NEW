@@ -77,12 +77,16 @@ public class FileSender extends Thread {
 				System.out.println(msg);
 				System.out.println("File transfer failed");
 			}
+<<<<<<< HEAD
 			System.out.println("writing ack");
 //			dataOutputStream.write("ack received".getBytes());
 			PrintWriter writer=new PrintWriter(socket.getOutputStream());
 			writer.print(1);
 			System.out.println("ack writted");
 			FileClient.printMenu();
+=======
+			System.out.println("Enter the file path");
+>>>>>>> parent of 64a26fa... LIST Feature
 			fileInputStream.close();
 			inputStream.close();
 			dataOutputStream.flush();
