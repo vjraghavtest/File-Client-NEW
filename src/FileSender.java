@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class FileSender extends Thread {
@@ -31,7 +30,6 @@ public class FileSender extends Thread {
 		try {
 			// init
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			FileClient.state=true;
 
 			// socket op stream
 			System.out.println("Preparing to send data");
@@ -74,23 +72,13 @@ public class FileSender extends Thread {
 				System.out.println("File transfer success");
 				System.out.println("File stored at " + msg.substring(8));
 			} else {
-				System.out.println(msg);
 				System.out.println("File transfer failed");
 			}
-<<<<<<< HEAD
-			System.out.println("writing ack");
-//			dataOutputStream.write("ack received".getBytes());
-			PrintWriter writer=new PrintWriter(socket.getOutputStream());
-			writer.print(1);
-			System.out.println("ack writted");
 			FileClient.printMenu();
-=======
-			System.out.println("Enter the file path");
->>>>>>> parent of 64a26fa... LIST Feature
 			fileInputStream.close();
 			inputStream.close();
 			dataOutputStream.flush();
-			FileClient.state=false;
+
 		} catch (IOException e) {
 			System.out.println("Unable to send file to server");
 //			e.printStackTrace();

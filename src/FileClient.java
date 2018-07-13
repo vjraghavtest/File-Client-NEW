@@ -3,22 +3,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.StringTokenizer;
 
 public class FileClient {
 
 	public static String HOST = "127.0.0.1";
 	public static int PORT = 5555;
-	public static boolean state;
-	
+
 	public static void main(String[] args) {
 		Socket socket = null;
 		String name = null, cmd = null, checksum = null, filename = null;
 		PrintWriter printWriter = null;
 		BufferedReader socketReader = null;
-		Thread thread = null;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String details = null;
 		File file = null;
@@ -53,8 +51,16 @@ public class FileClient {
 			printWriter.println(name);
 			printWriter.flush();
 			System.out.println("Name sent to server");
+
+			// check for ack
 			socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e) {
+			if (socketReader.readLine().equals("ACK")) {
+				System.out.println("ACK RECEIVED");
+			} else {
+				System.out.println("NO ACK");
+			}
+
+		} catch (Exception e) {
 			System.out.println("Unable to communicate with server");
 			try {
 				socket.close();
@@ -63,18 +69,14 @@ public class FileClient {
 			}
 			// e.printStackTrace();
 		}
-		state=false;
+
 		// infinite loop until user enter END
 		while (true) {
 			try {
 
 				// checking server status
-				while (state) {
-					
-				}
-				System.out.println("receiving hello");
-				socketReader.readLine().equals("Hello");
-				System.out.println("Server is alive");
+				if (socket.getInputStream() == null)
+					break;
 
 				// printing menu
 				printMenu();
@@ -122,8 +124,7 @@ public class FileClient {
 
 							// Send the file
 							System.out.println("Sending files");
-							thread = new FileSender(socket, cmd);
-							thread.start();
+							new FileSender(socket, cmd).start();
 							System.out.println("Thread to send data started");
 
 							printWriter.flush();
@@ -139,35 +140,27 @@ public class FileClient {
 				} else if (cmd.equalsIgnoreCase("LIST")) {
 
 					// make string for request
-<<<<<<< HEAD
-					String req = "LIST|";
-=======
->>>>>>> parent of 64a26fa... LIST Feature
+					String req="LIST|";
 					// send request to server
+					printWriter.println(req);
+					printWriter.flush();
 					// waiting for result
-<<<<<<< HEAD
-					String res = socketReader.readLine();
-
+					String res=socketReader.readLine();
 					// display file details from strings
-					// System.out.println(res);
-					// no file
-					if (res.equals("")) {
+//					System.out.println(res);
+					//no file
+					if(res.equals("")){
 						System.out.println("You have no files to display");
 						continue;
 					}
 					System.out.println("------------------------------------------");
 					System.out.println("Filename - Filepath");
-					StringTokenizer stringTokenizer = new StringTokenizer(res, "|");
-					while (stringTokenizer.hasMoreTokens()) {
-						StringTokenizer stringTokenizer2 = new StringTokenizer(stringTokenizer.nextToken(), "<");
-						System.out.println(stringTokenizer2.nextToken() + " - " + stringTokenizer2.nextToken());
+					StringTokenizer stringTokenizer=new StringTokenizer(res, "|");
+					while(stringTokenizer.hasMoreTokens()){
+						StringTokenizer stringTokenizer2=new StringTokenizer(stringTokenizer.nextToken(), "<");
+						System.out.println(stringTokenizer2.nextToken()+" - "+stringTokenizer2.nextToken());
 					}
 					System.out.println("--------------------------------------------");
-					printWriter.print(1);
-					printWriter.flush();
-=======
-					// display file details from strings
->>>>>>> parent of 64a26fa... LIST Feature
 
 				} else if (cmd.equalsIgnoreCase("END")) {
 					System.out.println("Goodbye");
