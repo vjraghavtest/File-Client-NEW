@@ -9,8 +9,8 @@ import java.net.UnknownHostException;
 public class FileClient {
 
 	public static String HOST = "127.0.0.1";
-	public static int PORT=5555;
-	
+	public static int PORT = 5555;
+
 	public static void main(String[] args) {
 		Socket socket = null;
 		String name = null, cmd = null, checksum = null, filename = null;
@@ -39,7 +39,7 @@ public class FileClient {
 			System.out.println("Enter name");
 			name = reader.readLine();
 		} catch (IOException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 			System.out.println("Server disconnected");
 		}
 
@@ -66,67 +66,93 @@ public class FileClient {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 		// infinite loop until user enter END
 		while (true) {
 			try {
-				//checking server status
-				if(socket.getInputStream() == null)
+
+				// checking server status
+				if (socket.getInputStream() == null)
 					break;
-				
-				
-				System.out.println("Enter the file path");
+
+				// printing menu
+				printMenu();
 				cmd = reader.readLine();
-				if (cmd.equals("END"))
-					break;
-				cmd = cmd.replace("\"", "");
-				// checking it is file or not
-				System.out.println("Loading file with path " + cmd);
-				file = new File(cmd);
-				if ((file.isFile())) {
-					// sending file details as string to server
-					filename = cmd.substring(cmd.lastIndexOf("\\") + 1);
-					System.out.println("Calculating checksum");
-					checksum = Checksum.getChecksum(cmd);
-					details = "name:" + filename + ",checksum:" + checksum + ",filesize:" + file.length() + ",owner:"
-							+ name + "|";
-					System.out.println("File Details - " + details);
 
-					// creating object op stream
-					// sending object to server
-					try {
-						System.out.println("Sending file details");
-						printWriter.println(details);
-						printWriter.flush();
-						System.out.println("File details sent");
+				// handling command
+				// send command
+				if (cmd.startsWith("SEND") || cmd.startsWith("send")) {
+					// send command
+					// seperate path from cmd
+					cmd = cmd.substring(4);
+					cmd = cmd.trim();
+					cmd = cmd.replace("\"", "");
 
-						// receiving ack for obj
-						if (socketReader.readLine().equals("ACK OBJ")) {
-							System.out.println("ACK OBJ received");
-						} else {
-							System.out.println("No ACK OBJ");
-							throw new Exception("NO ACK OBJ");
+					// send data
+					// checking it is file or not
+					System.out.println("Loading file with path " + cmd);
+					file = new File(cmd);
+					if ((file.isFile())) {
+						// sending file details as string to server
+						filename = cmd.substring(cmd.lastIndexOf("\\") + 1);
+						System.out.println("Calculating checksum");
+						checksum = Checksum.getChecksum(cmd);
+
+						// adding prefix denoting file info
+						details = "INFOname:" + filename + ",checksum:" + checksum + ",filesize:" + file.length()
+								+ ",owner:" + name + "|";
+						System.out.println("File Details - " + details);
+
+						// creating object op stream
+						// sending object to server
+						try {
+							System.out.println("Sending file details");
+							printWriter.println(details);
+							printWriter.flush();
+							System.out.println("File details sent");
+
+							// receiving ack for obj
+							if (socketReader.readLine().equals("ACK OBJ")) {
+								System.out.println("ACK OBJ received");
+							} else {
+								System.out.println("No ACK OBJ");
+								throw new Exception("NO ACK OBJ");
+							}
+
+							// Send the file
+							System.out.println("Sending files");
+							new FileSender(socket, cmd).start();
+							System.out.println("Thread to send data started");
+
+							printWriter.flush();
+
+						} catch (Exception e) {
+							// e.printStackTrace();
+							System.out.println("Connot receive ACK from server");
+							break;
 						}
+					} else
+						System.out.println("File not found");
 
-						// Send the file
-						System.out.println("Sending files");
-						new FileSender(socket, cmd).start();
-						System.out.println("Thread to send data started");
-
-						printWriter.flush();
-
-					} catch (Exception e) {
-//						e.printStackTrace();
-						System.out.println("Connot receive ACK from server");
-						break;
-					}
-				} else
-					System.out.println("File not found");
+				} else if (cmd.equalsIgnoreCase("LIST")) {
+					
+					//make string for request
+					//send request to server
+					//waiting for result
+					//display file details from strings
+					
+				} else if (cmd.equalsIgnoreCase("END")) {
+					System.out.println("Goodbye");
+					printWriter.println("END|");
+					printWriter.flush();
+					socket.close();
+					break;
+				}
 
 			} catch (IOException e) {
-//				e.printStackTrace();
+				// e.printStackTrace();
 				System.out.println("Connot receive ACK from server");
 				break;
 			}
@@ -142,6 +168,13 @@ public class FileClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void printMenu() {
+		System.out.println("Enter command");
+		System.out.println("SEND path - send file");
+		System.out.println("LIST - to list all the files");
+		System.out.println("END - end connection");
 	}
 
 }
