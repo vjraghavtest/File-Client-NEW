@@ -18,7 +18,7 @@ public class Checksum {
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
-			byte[] fileData = new byte[(int) file.length()];
+			byte[] fileData = new byte[1024*1024];
 			int read = 0;
 			try {
 				while ((read = fileInputStream.read(fileData)) != -1) {

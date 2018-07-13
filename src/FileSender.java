@@ -19,7 +19,7 @@ public class FileSender extends Thread {
 	}
 
 	public void run() {
-		byte[] buffer = new byte[8 * 1024];
+		byte[] buffer = new byte[1024 * 1024];
 		DataOutputStream dataOutputStream = null;
 		FileInputStream fileInputStream = null;
 		DataInputStream inputStream = null;
@@ -44,23 +44,23 @@ public class FileSender extends Thread {
 			System.out.println("File prepared");
 
 			// send file
-			System.out.println("Started to send file");
+			System.out.println("Sending file");
 			while (true) {
 				// reading from file
-				// System.out.println("Reading from file");
+//				 System.out.println("Reading from file");
 				bytesRead = inputStream.read(buffer);
-				// System.out.println(bytesRead+" bytes readed from file");
+//				 System.out.println(bytesRead+" bytes readed from file");
 
 				// EOF
 				if (bytesRead < 0) {
-					System.out.println("EOF reached");
+//					System.out.println("EOF reached");
 					break;
 				}
 
 				// writing into stream
-				// System.out.println("Writing into stream");
+//				 System.out.println("Writing into stream");
 				dataOutputStream.write(buffer, 0, bytesRead);
-				// System.out.println(bytesRead+" bytes sent");
+//				 System.out.println(bytesRead+" bytes sent");
 			}
 			System.out.println("Flushing stream");
 			dataOutputStream.flush();
@@ -80,7 +80,8 @@ public class FileSender extends Thread {
 			dataOutputStream.flush();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Unable to send file to server");
+//			e.printStackTrace();
 		}
 	}
 }
