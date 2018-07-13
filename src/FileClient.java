@@ -137,12 +137,12 @@ public class FileClient {
 						System.out.println("File not found");
 
 				} else if (cmd.equalsIgnoreCase("LIST")) {
-					
-					//make string for request
-					//send request to server
-					//waiting for result
-					//display file details from strings
-					
+
+					// make string for request
+					// send request to server
+					// waiting for result
+					// display file details from strings
+
 				} else if (cmd.equalsIgnoreCase("END")) {
 					System.out.println("Goodbye");
 					printWriter.println("END|");
