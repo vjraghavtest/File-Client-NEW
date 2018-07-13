@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
@@ -75,8 +76,8 @@ public class FileClient {
 			try {
 
 				// checking server status
-				if (socket.getInputStream() == null)
-					break;
+				socketReader.readLine().equals("Hello");
+				System.out.println("Server is alive");
 
 				// printing menu
 				printMenu();
@@ -140,25 +141,26 @@ public class FileClient {
 				} else if (cmd.equalsIgnoreCase("LIST")) {
 
 					// make string for request
-					String req="LIST|";
+					String req = "LIST|";
 					// send request to server
 					printWriter.println(req);
 					printWriter.flush();
 					// waiting for result
-					String res=socketReader.readLine();
+					String res = socketReader.readLine();
+					
 					// display file details from strings
-//					System.out.println(res);
-					//no file
-					if(res.equals("")){
+					// System.out.println(res);
+					// no file
+					if (res.equals("")) {
 						System.out.println("You have no files to display");
 						continue;
 					}
 					System.out.println("------------------------------------------");
 					System.out.println("Filename - Filepath");
-					StringTokenizer stringTokenizer=new StringTokenizer(res, "|");
-					while(stringTokenizer.hasMoreTokens()){
-						StringTokenizer stringTokenizer2=new StringTokenizer(stringTokenizer.nextToken(), "<");
-						System.out.println(stringTokenizer2.nextToken()+" - "+stringTokenizer2.nextToken());
+					StringTokenizer stringTokenizer = new StringTokenizer(res, "|");
+					while (stringTokenizer.hasMoreTokens()) {
+						StringTokenizer stringTokenizer2 = new StringTokenizer(stringTokenizer.nextToken(), "<");
+						System.out.println(stringTokenizer2.nextToken() + " - " + stringTokenizer2.nextToken());
 					}
 					System.out.println("--------------------------------------------");
 

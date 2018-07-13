@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class FileSender extends Thread {
@@ -72,8 +73,10 @@ public class FileSender extends Thread {
 				System.out.println("File transfer success");
 				System.out.println("File stored at " + msg.substring(8));
 			} else {
+				System.out.println(msg);
 				System.out.println("File transfer failed");
 			}
+			
 			FileClient.printMenu();
 			fileInputStream.close();
 			inputStream.close();
