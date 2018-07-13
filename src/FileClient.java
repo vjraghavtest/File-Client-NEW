@@ -91,7 +91,7 @@ public class FileClient {
 					System.out.println("Calculating checksum");
 					checksum = Checksum.getChecksum(cmd);
 					details = "name:" + filename + ",checksum:" + checksum + ",filesize:" + file.length() + ",owner:"
-							+ name + ",key:value";
+							+ name + "|";
 					System.out.println("File Details - " + details);
 
 					// creating object op stream
