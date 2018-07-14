@@ -20,7 +20,7 @@ public class FileSender extends Thread {
 
 	public void run() {
 		byte[] buffer = new byte[1024 * 1024];
-		DataOutputStream dataOutputStream = null;
+		BufferedOutputStream outputStream = null;
 		FileInputStream fileInputStream = null;
 		DataInputStream inputStream = null;
 		BufferedReader reader = null;
@@ -33,7 +33,7 @@ public class FileSender extends Thread {
 
 			// socket op stream
 			System.out.println("Preparing to send data");
-			dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+			outputStream = new BufferedOutputStream(socket.getOutputStream());
 			System.out.println("Output stream loaded");
 
 			// ip stream for file reading
@@ -47,23 +47,23 @@ public class FileSender extends Thread {
 			System.out.println("Sending file");
 			while (true) {
 				// reading from file
-//				 System.out.println("Reading from file");
+				// System.out.println("Reading from file");
 				bytesRead = inputStream.read(buffer);
-//				 System.out.println(bytesRead+" bytes readed from file");
+				// System.out.println(bytesRead+" bytes readed from file");
 
 				// EOF
 				if (bytesRead < 0) {
-//					System.out.println("EOF reached");
+					// System.out.println("EOF reached");
 					break;
 				}
 
 				// writing into stream
-//				 System.out.println("Writing into stream");
-				dataOutputStream.write(buffer, 0, bytesRead);
-//				 System.out.println(bytesRead+" bytes sent");
+				// System.out.println("Writing into stream");
+				outputStream.write(buffer, 0, bytesRead);
+				// System.out.println(bytesRead+" bytes sent");
 			}
 			System.out.println("Flushing stream");
-			dataOutputStream.flush();
+			outputStream.flush();
 			System.out.println("File sent");
 
 			// receiving ack from server
@@ -77,11 +77,11 @@ public class FileSender extends Thread {
 			FileClient.printMenu();
 			fileInputStream.close();
 			inputStream.close();
-			dataOutputStream.flush();
+			outputStream.flush();
 
 		} catch (IOException e) {
 			System.out.println("Unable to send file to server");
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 }
