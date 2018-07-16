@@ -131,8 +131,16 @@ public class FileClient {
 								System.out.println("Connot receive ACK from server");
 								break;
 							}
-						} else
+						} else {
 							System.out.println("File not found");
+							//sending echo
+							String req="ECHO|";
+							outputStream.write(req.getBytes());
+							outputStream.flush();
+							//receiving echo
+							String res=socketReader.readLine();
+							System.out.println("Server alive "+res);
+						}
 
 					} else if (cmd.equalsIgnoreCase("LIST")) {
 
