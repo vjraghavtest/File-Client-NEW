@@ -41,7 +41,7 @@ public class FileClient {
 			try {
 				System.out.println("Enter name");
 				name = reader.readLine();
-				if (name.equals("") || name.equals("null")) {
+				if (name.equals("") || name.equals("null") || name.contains("|")) {
 					System.out.println("Invalid name");
 					continue;
 				}
