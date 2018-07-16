@@ -36,14 +36,22 @@ public class FileClient {
 
 		System.out.println("Client started");
 		System.out.println("Client connected");
-		// client name
-		try {
-			System.out.println("Enter name");
-			name = reader.readLine();
-		} catch (IOException e) {
-			// e.printStackTrace();
-			System.out.println("Server disconnected");
+		while (true) {
+			// client name
+			try {
+				System.out.println("Enter name");
+				name = reader.readLine();
+				if (name.equals("") || name.equals("null")) {
+					System.out.println("Invalid name");
+					continue;
+				}
+				break;
+			} catch (IOException e) {
+				// e.printStackTrace();
+				System.out.println("Server disconnected");
+			} 
 		}
+		
 
 		// send name
 
@@ -212,7 +220,7 @@ public class FileClient {
 				socket.close();
 				System.out.println("Connection closed");
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 	}
