@@ -49,9 +49,8 @@ public class FileClient {
 			} catch (IOException e) {
 				// e.printStackTrace();
 				System.out.println("Server disconnected");
-			} 
+			}
 		}
-		
 
 		// send name
 
@@ -63,7 +62,9 @@ public class FileClient {
 			// printWriter.flush();
 			outputStream.flush();
 			System.out.println("Name sent to server");
-
+			
+			socket.setSoTimeout(1000);
+			
 			// check for ack
 			socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			if (socketReader.readLine().equals("ACK")) {
@@ -71,7 +72,9 @@ public class FileClient {
 			} else {
 				System.out.println("NO ACK");
 			}
-
+			
+			socket.setSoTimeout(0);
+			
 			// infinite loop until user enter END
 			while (true) {
 				try {
@@ -141,13 +144,13 @@ public class FileClient {
 							}
 						} else {
 							System.out.println("File not found");
-							//sending echo
-							String req="ECHO|";
+							// sending echo
+							String req = "ECHO|";
 							outputStream.write(req.getBytes());
 							outputStream.flush();
-							//receiving echo
-							String res=socketReader.readLine();
-							System.out.println("Server alive "+res);
+							// receiving echo
+							String res = socketReader.readLine();
+							System.out.println("Server alive " + res);
 						}
 
 					} else if (cmd.equalsIgnoreCase("LIST")) {
@@ -186,13 +189,13 @@ public class FileClient {
 						socket.close();
 						break;
 					} else {
-						//sending echo
-						String req="ECHO|";
+						// sending echo
+						String req = "ECHO|";
 						outputStream.write(req.getBytes());
 						outputStream.flush();
-						//receiving echo
-						String res=socketReader.readLine();
-						System.out.println("Server alive "+res);
+						// receiving echo
+						String res = socketReader.readLine();
+						System.out.println("Server alive " + res);
 					}
 
 				} catch (IOException e) {
@@ -220,7 +223,7 @@ public class FileClient {
 				socket.close();
 				System.out.println("Connection closed");
 			} catch (IOException e) {
-//				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 	}
