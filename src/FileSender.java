@@ -46,20 +46,15 @@ public class FileSender extends Thread {
 			System.out.println("Sending file");
 			while (true) {
 				// reading from file
-				// System.out.println("Reading from file");
 				bytesRead = inputStream.read(buffer);
-				// System.out.println(bytesRead+" bytes readed from file");
 
 				// EOF
 				if (bytesRead < 0) {
-					// System.out.println("EOF reached");
 					break;
 				}
 
 				// writing into stream
-				// System.out.println("Writing into stream");
 				outputStream.write(buffer, 0, bytesRead);
-				// System.out.println(bytesRead+" bytes sent");
 			}
 			System.out.println("Flushing stream");
 			outputStream.flush();

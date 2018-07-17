@@ -55,11 +55,8 @@ public class FileClient {
 		// send name
 
 		try {
-			// printWriter = new PrintWriter(socket.getOutputStream());
 			outputStream = new BufferedOutputStream(socket.getOutputStream());
-			// printWriter.println(name);
 			outputStream.write((name + "\n").getBytes());
-			// printWriter.flush();
 			outputStream.flush();
 			System.out.println("Name sent to server");
 			
@@ -73,7 +70,7 @@ public class FileClient {
 				System.out.println("NO ACK");
 			}
 			
-			socket.setSoTimeout(0);
+			socket.setSoTimeout(300000);
 			
 			// infinite loop until user enter END
 			while (true) {
@@ -115,9 +112,7 @@ public class FileClient {
 							// sending object to server
 							try {
 								System.out.println("Sending file details");
-								// printWriter.println(details);
 								outputStream.write(details.getBytes());
-								// printWriter.flush();
 								outputStream.flush();
 								System.out.println("File details sent");
 
@@ -158,14 +153,11 @@ public class FileClient {
 						// make string for request
 						String req = "LIST|";
 						// send request to server
-						// printWriter.println(req);
 						outputStream.write(req.getBytes());
-						// printWriter.flush();
 						outputStream.flush();
 						// waiting for result
 						String res = socketReader.readLine();
 						// display file details from strings
-						// System.out.println(res);
 						// no file
 						if (res.equals("")) {
 							System.out.println("You have no files to display");
@@ -182,9 +174,7 @@ public class FileClient {
 
 					} else if (cmd.equalsIgnoreCase("END")) {
 						System.out.println("Goodbye");
-						// printWriter.println("END|");
 						outputStream.write("END|".getBytes());
-						// printWriter.flush();
 						outputStream.flush();
 						socket.close();
 						break;
@@ -199,7 +189,6 @@ public class FileClient {
 					}
 
 				} catch (IOException e) {
-					// e.printStackTrace();
 					System.out.println("Connot receive ACK from server");
 					break;
 				}
@@ -212,18 +201,15 @@ public class FileClient {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			// e.printStackTrace();
 		} finally {
 			// close connection at end
 			try {
-				// objectOutputStream.close();
-				// printWriter.close();
 				outputStream.close();
 				reader.close();
 				socket.close();
 				System.out.println("Connection closed");
 			} catch (IOException e) {
-				// e.printStackTrace();
+				 e.printStackTrace();
 			}
 		}
 	}
